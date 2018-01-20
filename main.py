@@ -16,10 +16,10 @@ def main():
     print('Hello World')
 
     # Initialize our object instances
-    cam = CameraHandler()
-    image_process = ImageProcessor()
-    eyetrack = EyeTracker()
-    media_player = MediaHandler()
+    cam = CameraHandler.CameraHandler()
+    image_process = ImageProcessor.ImageProcessor()
+    eyetrack = EyeTracker.EyeTracker()
+    media_player = MediaHandler.MediaHandler()
 
     # TODO: Get image from Camera Handler (use/build out cam)
 
@@ -28,6 +28,8 @@ def main():
     # TODO: Determine eye position (use/build out eyetrack)
 
     # TODO: Action media player if necessary
+    media_player.start_media()
+    media_player.stop_media()
 
     return
 
