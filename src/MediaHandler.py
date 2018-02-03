@@ -7,22 +7,17 @@
 
 class MediaHandler:
     def __init__(self):
-        self.placeholder = 'placeholder'
-        self.isMediaPlaying = False
-
-    def placeholder(self):
-        self.placeholder = 'change'
-
-        return
+        # Assume media is playing to begin
+        self.isMediaPlaying = True
 
     def start_media(self):
-        print('This would start media')
+        print('ACTION: This would start media')
         self.isMediaPlaying = True
 
         return
 
     def stop_media(self):
-        print('This would stop media')
+        print('ACTION: This would stop media')
         self.isMediaPlaying = False
 
         return

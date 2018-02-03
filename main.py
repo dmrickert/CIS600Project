@@ -51,30 +51,65 @@ def main():
         if not image_process.extract_face():
             # No face was detected, sleep for a second and try again
             print('INFO: No face detected.')
-            time.sleep(1)
+
+            # Log the inattention.  If returns true, inattention limit hit
+            if eye_track.track_inattention():
+                # Turn off media if it's playing
+                if media_player.isMediaPlaying:
+                    # Turn off media
+                    media_player.stop_media()
+
+            # Still display the image so it's fluid
+            if not image_process.show_image(image_process.rawImage):
+                break
+
             continue
 
         # Determine eye locations if they exist
         if not image_process.extract_eyes():
-            # No eyes were detected, sleep for a second and try again
-            print('INFO: No eyes detected')
-            time.sleep(1)
+            # No eyes were detected
+            print('INFO: Two open eyes not detected')
+
+            # Log the inattention.  If returns true, inattention limit hit
+            if eye_track.track_inattention():
+                # Turn off media if it's playing
+                if media_player.isMediaPlaying:
+                    # Turn off media
+                    media_player.stop_media()
+
+            # Still display the image so it's fluid
+            if not image_process.show_image(image_process.rawImage):
+                break
+
             continue
 
-        # Determine eye position (use/build out eyetrack)
+        # TODO (MAYBE): Determine pupil location (use/build out eyetrack)
         pupilLocation = image_process.extract_pupils()
 
-        # Determine if face is looking towards our camera or away
+        # TODO (MAYBE): Determine attention based on eyebox and pupil location
         attentiveFlag = eye_track.determine_attention(True, True)
 
-        # Action media player if necessary
-        # TODO: Also check if media is already playing
+        # Check if we determined that the user was paying attention
         if attentiveFlag:
-            media_player.start_media()
-        else:
-            media_player.stop_media()
+            # Log that the user was in fact paying attention
+            if eye_track.track_attention():
+                # Start media if it's not playing
+                if not media_player.isMediaPlaying:
+                    media_player.start_media()
+        else: # Determined not attention
+            if eye_track.track_inattention():
+                # Turn off media if it's playing
+                if media_player.isMediaPlaying:
+                    # Turn off media
+                    media_player.stop_media()
 
-        #time.sleep(3)
+        # Show the image and check if we should break
+        #   (function would return false)
+        if not image_process.show_image(image_process.rawImage):
+            break
+
+    # Release the capture and destroy our webcam output window
+    cam.camera.release()
 
     return
 
