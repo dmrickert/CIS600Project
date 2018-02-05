@@ -18,6 +18,14 @@ class ImageProcessor:
 
         self.face = {}
 
+        self.green_threshold = 0
+        self.red_threshold = 10
+
+    # Set color set_colors_thresholds
+    def set_colors_thresholds(self, minLevel, maxLevel):
+        self.green_threshold = minLevel
+        self.red_threshold = maxLevel
+
     # Convert a raw webcam image to an image we want to process
     def convert_raw(self, image):
         #self.show_image(image)
@@ -95,10 +103,31 @@ class ImageProcessor:
         return
 
     # Show an image file
-    def show_image(self, image):
+    def show_image(self, image, text='None'):
+        # Add text to the image
+        if text != 'None':
+            text = 'Inattention Score: {}'.format(text)
+            image = self.write_text(image, text)
+
         cv2.imshow('Image', image)
 
         if cv2.waitKey(50) & 0xFF == ord('q'):
             return False
 
         return True
+
+    # Write text onto the image in the bottom left corner
+    def write_text(self, image, text):
+        # Determine if the score is 0 or 20 or inbetween to color
+        if text.endswith(' ' + str(self.green_threshold)):
+            color = (0, 255, 0) # Green
+        elif text.endswith(' ' + str(self.red_threshold)):
+            color = (0, 0, 255) # Red
+        else:
+            color = (0, 255, 255) # Yellow
+
+        font = cv2.FONT_HERSHEY_SIMPLEX
+        image = cv2.putText(image, text, (10,30), font, 1,
+            color, 2, cv2.LINE_AA)
+
+        return image

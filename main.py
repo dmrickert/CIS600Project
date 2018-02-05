@@ -39,6 +39,10 @@ def main():
     eye_track = EyeTracker.EyeTracker()
     media_player = MediaHandler.MediaHandler()
 
+    # Set our color thresholds (min and max correspond to green and red)
+    image_process.set_colors_thresholds(eye_track.INATTENTION_MIN,
+        eye_track.INATTENTION_MAX)
+
     # Kick off the while loop that will run eye detection
     while True:
         # Get image from Camera Handler (use/build out cam)
@@ -60,7 +64,9 @@ def main():
                     media_player.stop_media()
 
             # Still display the image so it's fluid
-            if not image_process.show_image(image_process.rawImage):
+            if not image_process.show_image(image_process.rawImage,
+                eye_track.inattentionScore):
+
                 break
 
             continue
@@ -78,7 +84,9 @@ def main():
                     media_player.stop_media()
 
             # Still display the image so it's fluid
-            if not image_process.show_image(image_process.rawImage):
+            if not image_process.show_image(image_process.rawImage,
+                eye_track.inattentionScore):
+
                 break
 
             continue
@@ -105,7 +113,9 @@ def main():
 
         # Show the image and check if we should break
         #   (function would return false)
-        if not image_process.show_image(image_process.rawImage):
+        if not image_process.show_image(image_process.rawImage,
+            eye_track.inattentionScore):
+
             break
 
     # Release the capture and destroy our webcam output window

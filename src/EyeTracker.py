@@ -9,7 +9,7 @@ class EyeTracker:
     def __init__(self):
         self.inattentionScore = 0
 
-        self.INATTENTION_MAX = 20
+        self.INATTENTION_MAX = 10
         self.INATTENTION_MIN = 0
 
     def determine_attention(self, eyeLocations, pupilLocation):
