@@ -31,12 +31,14 @@ def main():
 
     # Get the path to the resource folder
     resourceFolder = os.path.join(main_dir, 'res')
+    # Name of song in the resource folder
+    songPath = os.path.join(resourceFolder, 'Campfire+Song.mp3')
 
     # Initialize our object instances
     cam = CameraHandler.CameraHandler(0)
     image_process = ImageProcessor.ImageProcessor(resourceFolder)
     attention_track = AttentionTracker.AttentionTracker()
-    media_player = MediaHandler.MediaHandler()
+    media_player = MediaHandler.MediaHandler(songPath)
 
     # Set our color thresholds (min and max correspond to green and red)
     image_process.set_colors_thresholds(attention_track.INATTENTION_MIN,
