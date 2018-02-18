@@ -2,12 +2,12 @@
 
 '''
    Initial main file for our project.  This app takes a picture from the
-   webcam, extracts the face, extracts the eyes from the face, determines
-   pupil location, and then uses the pupil/eye location to determine attention.
+   webcam, extracts the face, extracts the eyes from the face, and then uses
+   the existance of frontal face/two eyes to determine attention.
 '''
 
 from src import CameraHandler
-from src import EyeTracker
+from src import AttentionTracker
 from src import ImageProcessor
 from src import MediaHandler
 
@@ -17,8 +17,7 @@ import time
 
 
 #    Main function, runs a while loop that continuously grabs images, extract
-#    face, extracts eyes, finds pupil location, use eyebox/pupil location
-#    to determine attention.
+#    face, extracts eyes, determines attention.
 def main():
     # Get current directory in a very future compatible way
     if hasattr(sys, "frozen"):
@@ -36,14 +35,14 @@ def main():
     # Initialize our object instances
     cam = CameraHandler.CameraHandler(0)
     image_process = ImageProcessor.ImageProcessor(resourceFolder)
-    eye_track = EyeTracker.EyeTracker()
+    attention_track = AttentionTracker.AttentionTracker()
     media_player = MediaHandler.MediaHandler()
 
     # Set our color thresholds (min and max correspond to green and red)
-    image_process.set_colors_thresholds(eye_track.INATTENTION_MIN,
-        eye_track.INATTENTION_MAX)
+    image_process.set_colors_thresholds(attention_track.INATTENTION_MIN,
+        attention_track.INATTENTION_MAX)
 
-    # Kick off the while loop that will run eye detection
+    # Kick off the while loop that will run attention detection
     while True:
         # Get image from Camera Handler (use/build out cam)
         rawImage = cam.grab_image()
@@ -57,7 +56,7 @@ def main():
             print('INFO: No face detected.')
 
             # Log the inattention.  If returns true, inattention limit hit
-            if eye_track.track_inattention():
+            if attention_track.track_inattention():
                 # Turn off media if it's playing
                 if media_player.isMediaPlaying:
                     # Turn off media
@@ -65,19 +64,19 @@ def main():
 
             # Still display the image so it's fluid
             if not image_process.show_image(image_process.rawImage,
-                eye_track.inattentionScore):
+                attention_track.inattentionScore):
 
                 break
 
             continue
 
-        # Determine eye locations if they exist
+        # Determine Eye locations if they exist
         if not image_process.extract_eyes():
             # No eyes were detected
             print('INFO: Two open eyes not detected')
 
             # Log the inattention.  If returns true, inattention limit hit
-            if eye_track.track_inattention():
+            if attention_track.track_inattention():
                 # Turn off media if it's playing
                 if media_player.isMediaPlaying:
                     # Turn off media
@@ -85,36 +84,22 @@ def main():
 
             # Still display the image so it's fluid
             if not image_process.show_image(image_process.rawImage,
-                eye_track.inattentionScore):
+                attention_track.inattentionScore):
 
                 break
 
             continue
 
-        # TODO (MAYBE): Determine pupil location (use/build out eyetrack)
-        pupilLocation = image_process.extract_pupils()
-
-        # TODO (MAYBE): Determine attention based on eyebox and pupil location
-        attentiveFlag = eye_track.determine_attention(True, True)
-
-        # Check if we determined that the user was paying attention
-        if attentiveFlag:
-            # Log that the user was in fact paying attention
-            if eye_track.track_attention():
-                # Start media if it's not playing
-                if not media_player.isMediaPlaying:
-                    media_player.start_media()
-        else: # Determined not attention
-            if eye_track.track_inattention():
-                # Turn off media if it's playing
-                if media_player.isMediaPlaying:
-                    # Turn off media
-                    media_player.stop_media()
+        # Log that the user was in fact paying attention
+        if attention_track.track_attention():
+            # Start media if it's not playing
+            if not media_player.isMediaPlaying:
+                media_player.start_media()
 
         # Show the image and check if we should break
         #   (function would return false)
         if not image_process.show_image(image_process.rawImage,
-            eye_track.inattentionScore):
+            attention_track.inattentionScore):
 
             break
 

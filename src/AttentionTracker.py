@@ -1,20 +1,16 @@
 #!/usr/bin/env python
 
 '''
-   Class to handle the tracking of the eye in a processed image
+   Class to handle the tracking attention
 '''
 
 
-class EyeTracker:
+class AttentionTracker:
     def __init__(self):
         self.inattentionScore = 0
 
         self.INATTENTION_MAX = 10
         self.INATTENTION_MIN = 0
-
-    def determine_attention(self, eyeLocations, pupilLocation):
-
-        return True
 
     def track_inattention(self):
         # Max intattention score of 10 so that it doesn't take a while to

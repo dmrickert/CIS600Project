@@ -10,14 +10,17 @@ import os
 
 class ImageProcessor:
     def __init__(self, resourceFolder):
+        # Haar Cascade that detects a faces
         self.face_cascade = cv2.CascadeClassifier(
             os.path.join(resourceFolder, 'haarcascade_frontalface_default.xml')
             )
+        # Haar Cascade that detects eyes
         self.eye_cascade = cv2.CascadeClassifier(
             os.path.join(resourceFolder, 'haarcascade_eye.xml'))
 
         self.face = {}
 
+        # Thresholds for when to turn text green and when to turn text red
         self.green_threshold = 0
         self.red_threshold = 10
 
@@ -95,12 +98,6 @@ class ImageProcessor:
         # self.show_image(self.face_color) # Show only the face (in color)
 
         return True
-
-    # Extract pupils from the eyes
-    def extract_pupils(self):
-        self.placeholder = 'change'
-
-        return
 
     # Show an image file
     def show_image(self, image, text='None'):
