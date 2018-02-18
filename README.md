@@ -7,6 +7,9 @@ eyes are present in the detected face.  A threshold accounts for any
 minor inconsistencies with the computer vision and temporary loss of face
 or open eyes to behaviors such as blinking or sneezing.
 
+Pausing/playing music is used to allow us to demonstrate a simple way how this
+attention tracker can be used to action another system.
+
 ## Getting started
 These instructions will get you a copy of the project up and running on your
 local machine.
