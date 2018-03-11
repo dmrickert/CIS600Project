@@ -1,2 +1,3 @@
 # Don't upload compiled Python files
 *.pyc
+samples/

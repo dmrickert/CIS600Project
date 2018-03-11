@@ -42,7 +42,7 @@ class ImageProcessor:
         # Use our HaarCaascade to find any faces
         self.faces = self.face_cascade.detectMultiScale(self.rawImage,
                                                         scaleFactor=1.1,
-                                                        minNeighbors=9
+                                                        minNeighbors=16
                                                         )
 
         # If we didn't find any faces, let the caller know
@@ -77,7 +77,7 @@ class ImageProcessor:
         # Use our HaarCaascade to find any eyes
         self.eyes = self.eye_cascade.detectMultiScale(self.face_gray,
                                                       scaleFactor=1.1,
-                                                      minNeighbors=5
+                                                      minNeighbors=15
                                                       )
 
         if not len(self.eyes) >= 2:
@@ -100,7 +100,7 @@ class ImageProcessor:
         return True
 
     # Show an image file
-    def show_image(self, image, text='None'):
+    def show_image(self, image, text='None', waitTime=50):
         # Add text to the image
         if text != 'None':
             text = 'Inattention Score: {}'.format(text)
@@ -108,7 +108,7 @@ class ImageProcessor:
 
         cv2.imshow('Image', image)
 
-        if cv2.waitKey(50) & 0xFF == ord('q'):
+        if cv2.waitKey(waitTime) & 0xFF == ord('q'):
             return False
 
         return True
